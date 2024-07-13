@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>pivotea</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">pivotea</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(pivotea)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;dplyr&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:base&#39;:</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<p>You can use <code>pivot()</code> to make a pivot table easily.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>hogwarts <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;hour&quot;</span>, <span class="at">col =</span> <span class="st">&quot;wday&quot;</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="st">&quot;subject&quot;</span>, <span class="st">&quot;teacher&quot;</span>, <span class="st">&quot;room&quot;</span>), <span class="at">split =</span> <span class="fu">c</span>(<span class="st">&quot;house&quot;</span>, <span class="st">&quot;grade&quot;</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; $Automatic.6</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 8</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   house     grade  hour mon                              tue   wed   thu   fri  </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                            &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 1 Automatic 6         1 Muggle Studies_Burbage_NA        &lt;NA&gt;  Arit… Tran… Divi…</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 2 Automatic 6         2 DADA_DADA Teacher_NA             &lt;NA&gt;  Rune… &lt;NA&gt;  Herb…</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 3 Automatic 6         3 Arithmancy_Vector_NA             &lt;NA&gt;  &lt;NA&gt;  Poti… Rune…</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 4 Automatic 6         4 Charms_Flitwick_NA               Poti… Char… Poti… Care…</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 5 Automatic 6         5 Care of Magical Creatures_CoMC … Tran… DADA… Mugg… Char…</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 6 Automatic 6         6 History of Magic_Binns_NA        Mugg… Divi… Hist… DADA…</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 7 Automatic 6         7 Runes_Batsheda Babbling_NA       Herb… Care… Tran… Arit…</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; $Automatic.7</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 8</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt;   house     grade  hour mon                              tue   wed   thu   fri  </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                            &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; 1 Automatic 7         1 Care of Magical Creatures_CoMC … &lt;NA&gt;  Rune… Divi… Char…</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; 2 Automatic 7         2 Charms_Flitwick_NA               Tran… &lt;NA&gt;  &lt;NA&gt;  Care…</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 3 Automatic 7         3 Runes_Batsheda Babbling_NA       &lt;NA&gt;  Poti… Arit… Arit…</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; 4 Automatic 7         4 Transfiguration_McGonagall_NA    Mugg… Poti… DADA… Poti…</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; 5 Automatic 7         5 Herbology_Sprout_NA              Arit… Herb… Tran… Mugg…</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; 6 Automatic 7         6 &lt;NA&gt;                             Hist… Care… Char… Rune…</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; 7 Automatic 7         7 DADA_DADA Teacher_NA             Divi… DADA… Mugg… Hist…</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; $G.1</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 8</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                  tue                   wed   thu   fri  </span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;                 &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; 1 G     1         1 DADA_DADA Teacher_NA Transfiguration_McGo… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; 2 G     1         2 Herbology_Sprout_NA  History of Magic_Bin… Herb… Flyi… &lt;NA&gt; </span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; 3 G     1         6 &lt;NA&gt;                 &lt;NA&gt;                  Poti… Tran… Char…</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; 4 G     1         7 &lt;NA&gt;                 Charms_Flitwick_NA    Poti… Hist… &lt;NA&gt; </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; $G.2</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 8</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                           tue          wed   thu   fri  </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; 1 G     2         1 Transfiguration_McGonagall_NA History of … &lt;NA&gt;  Hist… &lt;NA&gt; </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; 2 G     2         2 &lt;NA&gt;                          DADA_DADA T… Poti… Herb… Poti…</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; 3 G     2         3 Herbology_Sprout_NA           DADA_DADA T… Tran… Herb… Poti…</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; 4 G     2         6 &lt;NA&gt;                          &lt;NA&gt;         Char… DADA… &lt;NA&gt; </span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; 5 G     2         7 Charms_Flitwick_NA            &lt;NA&gt;         &lt;NA&gt;  &lt;NA&gt;  Tran…</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; $G.3</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                          tue          wed   thu   fri  </span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt;  1 G     3         1 Runes_Batsheda Babbling_3_E2 DADA_DADA T… &lt;NA&gt;  Care… Herb…</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt;  2 G     3         1 Divination_Div Teacher_3_E2  &lt;NA&gt;         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt;  3 G     3         2 Potions_Snape_NA             Care of Mag… Hist… DADA… Hist…</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt;  4 G     3         3 Potions_Snape_NA             Care of Mag… Char… DADA… Tran…</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt;  5 G     3         5 Charms_Flitwick_NA           &lt;NA&gt;         Poti… &lt;NA&gt;  Rune…</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt;  6 G     3         5 &lt;NA&gt;                         &lt;NA&gt;         &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt;  7 G     3         6 Herbology_Sprout_NA          Transfigura… Herb… Arit… Arit…</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="co">#&gt;  8 G     3         6 &lt;NA&gt;                         &lt;NA&gt;         &lt;NA&gt;  Mugg… &lt;NA&gt; </span></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co">#&gt;  9 G     3         7 Arithmancy_Vector_3_E1       Transfigura… Rune… Care… Char…</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co">#&gt; 10 G     3         7 Muggle Studies_Burbage_3_E1  &lt;NA&gt;         Divi… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="co">#&gt; $G.4</span></span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a><span class="co">#&gt; # A tibble: 11 × 8</span></span>
+<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                                 tue   wed   thu   fri  </span></span>
+<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a><span class="co">#&gt;  1 G     4         1 Herbology_Sprout_NA                 Poti… &lt;NA&gt;  Poti… DADA…</span></span>
+<span id="cb2-66"><a href="#cb2-66" tabindex="-1"></a><span class="co">#&gt;  2 G     4         2 &lt;NA&gt;                                &lt;NA&gt;  Arit… Char… &lt;NA&gt; </span></span>
+<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a><span class="co">#&gt;  3 G     4         2 &lt;NA&gt;                                &lt;NA&gt;  Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a><span class="co">#&gt;  4 G     4         3 Charms_Flitwick_NA                  Char… Arit… Rune… Hist…</span></span>
+<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a><span class="co">#&gt;  5 G     4         3 &lt;NA&gt;                                &lt;NA&gt;  &lt;NA&gt;  Divi… &lt;NA&gt; </span></span>
+<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a><span class="co">#&gt;  6 G     4         4 Arithmancy_Vector_4_E1              DADA… Herb… Rune… Herb…</span></span>
+<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a><span class="co">#&gt;  7 G     4         4 Muggle Studies_Burbage_4_E1         &lt;NA&gt;  &lt;NA&gt;  Divi… &lt;NA&gt; </span></span>
+<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a><span class="co">#&gt;  8 G     4         5 Transfiguration_McGonagall_NA       Care… Hist… Care… Tran…</span></span>
+<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a><span class="co">#&gt;  9 G     4         6 Runes_Batsheda Babbling_4_E2        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a><span class="co">#&gt; 10 G     4         6 Divination_Div Teacher_4_E2         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a><span class="co">#&gt; 11 G     4         7 Care of Magical Creatures_CoMC tea… &lt;NA&gt;  Tran… Poti… DADA…</span></span>
+<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a><span class="co">#&gt; $G.5</span></span>
+<span id="cb2-78"><a href="#cb2-78" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb2-79"><a href="#cb2-79" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                                 tue   wed   thu   fri  </span></span>
+<span id="cb2-80"><a href="#cb2-80" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-81"><a href="#cb2-81" tabindex="-1"></a><span class="co">#&gt;  1 G     5         1 History of Magic_Binns_NA           Rune… Hist… Arit… &lt;NA&gt; </span></span>
+<span id="cb2-82"><a href="#cb2-82" tabindex="-1"></a><span class="co">#&gt;  2 G     5         1 &lt;NA&gt;                                Divi… &lt;NA&gt;  Mugg… &lt;NA&gt; </span></span>
+<span id="cb2-83"><a href="#cb2-83" tabindex="-1"></a><span class="co">#&gt;  3 G     5         2 &lt;NA&gt;                                Arit… Care… &lt;NA&gt;  Tran…</span></span>
+<span id="cb2-84"><a href="#cb2-84" tabindex="-1"></a><span class="co">#&gt;  4 G     5         2 &lt;NA&gt;                                Mugg… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-85"><a href="#cb2-85" tabindex="-1"></a><span class="co">#&gt;  5 G     5         3 &lt;NA&gt;                                Herb… DADA… Char… &lt;NA&gt; </span></span>
+<span id="cb2-86"><a href="#cb2-86" tabindex="-1"></a><span class="co">#&gt;  6 G     5         4 Potions_Snape_NA                    Herb… DADA… Herb… Rune…</span></span>
+<span id="cb2-87"><a href="#cb2-87" tabindex="-1"></a><span class="co">#&gt;  7 G     5         4 &lt;NA&gt;                                &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-88"><a href="#cb2-88" tabindex="-1"></a><span class="co">#&gt;  8 G     5         5 DADA_DADA Teacher_NA                Char… Tran… Rune… Poti…</span></span>
+<span id="cb2-89"><a href="#cb2-89" tabindex="-1"></a><span class="co">#&gt;  9 G     5         6 Care of Magical Creatures_CoMC tea… Char… Tran… &lt;NA&gt;  Poti…</span></span>
+<span id="cb2-90"><a href="#cb2-90" tabindex="-1"></a><span class="co">#&gt; 10 G     5         7 History of Magic_Binns_NA           &lt;NA&gt;  &lt;NA&gt;  Arit… Care…</span></span>
+<span id="cb2-91"><a href="#cb2-91" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-92"><a href="#cb2-92" tabindex="-1"></a><span class="co">#&gt; $H.1</span></span>
+<span id="cb2-93"><a href="#cb2-93" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 8</span></span>
+<span id="cb2-94"><a href="#cb2-94" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                 tue                    wed   thu   fri  </span></span>
+<span id="cb2-95"><a href="#cb2-95" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;               &lt;chr&gt;                  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-96"><a href="#cb2-96" tabindex="-1"></a><span class="co">#&gt; 1 H     1         1 Potions_Snape_NA    Transfiguration_McGon… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-97"><a href="#cb2-97" tabindex="-1"></a><span class="co">#&gt; 2 H     1         2 Herbology_Sprout_NA Charms_Flitwick_NA     Herb… &lt;NA&gt;  Flyi…</span></span>
+<span id="cb2-98"><a href="#cb2-98" tabindex="-1"></a><span class="co">#&gt; 3 H     1         6 &lt;NA&gt;                &lt;NA&gt;                   DADA… Tran… Hist…</span></span>
+<span id="cb2-99"><a href="#cb2-99" tabindex="-1"></a><span class="co">#&gt; 4 H     1         7 Potions_Snape_NA    History of Magic_Binn… &lt;NA&gt;  Char… &lt;NA&gt; </span></span>
+<span id="cb2-100"><a href="#cb2-100" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-101"><a href="#cb2-101" tabindex="-1"></a><span class="co">#&gt; $H.2</span></span>
+<span id="cb2-102"><a href="#cb2-102" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 8</span></span>
+<span id="cb2-103"><a href="#cb2-103" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                           tue          wed   thu   fri  </span></span>
+<span id="cb2-104"><a href="#cb2-104" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-105"><a href="#cb2-105" tabindex="-1"></a><span class="co">#&gt; 1 H     2         1 Transfiguration_McGonagall_NA Charms_Flit… Poti… Char… &lt;NA&gt; </span></span>
+<span id="cb2-106"><a href="#cb2-106" tabindex="-1"></a><span class="co">#&gt; 2 H     2         2 History of Magic_Binns_NA     &lt;NA&gt;         DADA… Herb… &lt;NA&gt; </span></span>
+<span id="cb2-107"><a href="#cb2-107" tabindex="-1"></a><span class="co">#&gt; 3 H     2         3 Herbology_Sprout_NA           &lt;NA&gt;         Tran… Herb… DADA…</span></span>
+<span id="cb2-108"><a href="#cb2-108" tabindex="-1"></a><span class="co">#&gt; 4 H     2         6 DADA_DADA Teacher_NA          Potions_Sna… Hist… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-109"><a href="#cb2-109" tabindex="-1"></a><span class="co">#&gt; 5 H     2         7 &lt;NA&gt;                          Potions_Sna… &lt;NA&gt;  &lt;NA&gt;  Tran…</span></span>
+<span id="cb2-110"><a href="#cb2-110" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-111"><a href="#cb2-111" tabindex="-1"></a><span class="co">#&gt; $H.3</span></span>
+<span id="cb2-112"><a href="#cb2-112" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb2-113"><a href="#cb2-113" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                                 tue   wed   thu   fri  </span></span>
+<span id="cb2-114"><a href="#cb2-114" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-115"><a href="#cb2-115" tabindex="-1"></a><span class="co">#&gt;  1 H     3         1 Charms_Flitwick_NA                  &lt;NA&gt;  &lt;NA&gt;  DADA… Herb…</span></span>
+<span id="cb2-116"><a href="#cb2-116" tabindex="-1"></a><span class="co">#&gt;  2 H     3         2 Care of Magical Creatures_CoMC tea… Poti… Char… Poti… Char…</span></span>
+<span id="cb2-117"><a href="#cb2-117" tabindex="-1"></a><span class="co">#&gt;  3 H     3         3 Care of Magical Creatures_CoMC tea… Poti… Rune… Care… Tran…</span></span>
+<span id="cb2-118"><a href="#cb2-118" tabindex="-1"></a><span class="co">#&gt;  4 H     3         3 &lt;NA&gt;                                &lt;NA&gt;  Divi… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-119"><a href="#cb2-119" tabindex="-1"></a><span class="co">#&gt;  5 H     3         5 Runes_Batsheda Babbling_3_E2        DADA… Care… &lt;NA&gt;  Hist…</span></span>
+<span id="cb2-120"><a href="#cb2-120" tabindex="-1"></a><span class="co">#&gt;  6 H     3         5 Divination_Div Teacher_3_E2         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-121"><a href="#cb2-121" tabindex="-1"></a><span class="co">#&gt;  7 H     3         6 Herbology_Sprout_NA                 Tran… Herb… Arit… Arit…</span></span>
+<span id="cb2-122"><a href="#cb2-122" tabindex="-1"></a><span class="co">#&gt;  8 H     3         6 &lt;NA&gt;                                &lt;NA&gt;  &lt;NA&gt;  Mugg… &lt;NA&gt; </span></span>
+<span id="cb2-123"><a href="#cb2-123" tabindex="-1"></a><span class="co">#&gt;  9 H     3         7 Arithmancy_Vector_3_E1              Tran… Hist… DADA… Rune…</span></span>
+<span id="cb2-124"><a href="#cb2-124" tabindex="-1"></a><span class="co">#&gt; 10 H     3         7 Muggle Studies_Burbage_3_E1         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-125"><a href="#cb2-125" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-126"><a href="#cb2-126" tabindex="-1"></a><span class="co">#&gt; $H.4</span></span>
+<span id="cb2-127"><a href="#cb2-127" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb2-128"><a href="#cb2-128" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                           tue         wed   thu   fri  </span></span>
+<span id="cb2-129"><a href="#cb2-129" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-130"><a href="#cb2-130" tabindex="-1"></a><span class="co">#&gt;  1 H     4         1 Herbology_Sprout_NA           &lt;NA&gt;        Care… &lt;NA&gt;  Care…</span></span>
+<span id="cb2-131"><a href="#cb2-131" tabindex="-1"></a><span class="co">#&gt;  2 H     4         2 &lt;NA&gt;                          Runes_Bats… Arit… Rune… DADA…</span></span>
+<span id="cb2-132"><a href="#cb2-132" tabindex="-1"></a><span class="co">#&gt;  3 H     4         2 &lt;NA&gt;                          Divination… Mugg… Divi… &lt;NA&gt; </span></span>
+<span id="cb2-133"><a href="#cb2-133" tabindex="-1"></a><span class="co">#&gt;  4 H     4         3 History of Magic_Binns_NA     Runes_Bats… Arit… &lt;NA&gt;  Char…</span></span>
+<span id="cb2-134"><a href="#cb2-134" tabindex="-1"></a><span class="co">#&gt;  5 H     4         3 &lt;NA&gt;                          Divination… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-135"><a href="#cb2-135" tabindex="-1"></a><span class="co">#&gt;  6 H     4         4 Arithmancy_Vector_4_E1        Care of Ma… Herb… Hist… Herb…</span></span>
+<span id="cb2-136"><a href="#cb2-136" tabindex="-1"></a><span class="co">#&gt;  7 H     4         4 Muggle Studies_Burbage_4_E1   &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-137"><a href="#cb2-137" tabindex="-1"></a><span class="co">#&gt;  8 H     4         5 Transfiguration_McGonagall_NA Potions_Sn… Char… Poti… Tran…</span></span>
+<span id="cb2-138"><a href="#cb2-138" tabindex="-1"></a><span class="co">#&gt;  9 H     4         6 Charms_Flitwick_NA            DADA_DADA … &lt;NA&gt;  Poti… &lt;NA&gt; </span></span>
+<span id="cb2-139"><a href="#cb2-139" tabindex="-1"></a><span class="co">#&gt; 10 H     4         7 &lt;NA&gt;                          DADA_DADA … Tran… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-140"><a href="#cb2-140" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-141"><a href="#cb2-141" tabindex="-1"></a><span class="co">#&gt; $H.5</span></span>
+<span id="cb2-142"><a href="#cb2-142" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 8</span></span>
+<span id="cb2-143"><a href="#cb2-143" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                         tue            wed   thu   fri  </span></span>
+<span id="cb2-144"><a href="#cb2-144" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                       &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-145"><a href="#cb2-145" tabindex="-1"></a><span class="co">#&gt; 1 H     5         1 &lt;NA&gt;                        &lt;NA&gt;           Char… Arit… Rune…</span></span>
+<span id="cb2-146"><a href="#cb2-146" tabindex="-1"></a><span class="co">#&gt; 2 H     5         1 &lt;NA&gt;                        &lt;NA&gt;           &lt;NA&gt;  Mugg… &lt;NA&gt; </span></span>
+<span id="cb2-147"><a href="#cb2-147" tabindex="-1"></a><span class="co">#&gt; 3 H     5         2 &lt;NA&gt;                        Arithmancy_Ve… &lt;NA&gt;  Hist… Tran…</span></span>
+<span id="cb2-148"><a href="#cb2-148" tabindex="-1"></a><span class="co">#&gt; 4 H     5         2 &lt;NA&gt;                        Muggle Studie… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-149"><a href="#cb2-149" tabindex="-1"></a><span class="co">#&gt; 5 H     5         3 DADA_DADA Teacher_NA        Herbology_Spr… Care… Hist… Divi…</span></span>
+<span id="cb2-150"><a href="#cb2-150" tabindex="-1"></a><span class="co">#&gt; 6 H     5         4 DADA_DADA Teacher_NA        Herbology_Spr… Care… Herb… Char…</span></span>
+<span id="cb2-151"><a href="#cb2-151" tabindex="-1"></a><span class="co">#&gt; 7 H     5         5 Potions_Snape_NA            History of Ma… Tran… &lt;NA&gt;  DADA…</span></span>
+<span id="cb2-152"><a href="#cb2-152" tabindex="-1"></a><span class="co">#&gt; 8 H     5         6 Potions_Snape_NA            Runes_Batshed… Tran… &lt;NA&gt;  Care…</span></span>
+<span id="cb2-153"><a href="#cb2-153" tabindex="-1"></a><span class="co">#&gt; 9 H     5         7 Divination_Div Teacher_5_E2 Runes_Batshed… Char… Arit… Poti…</span></span>
+<span id="cb2-154"><a href="#cb2-154" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-155"><a href="#cb2-155" tabindex="-1"></a><span class="co">#&gt; $R.1</span></span>
+<span id="cb2-156"><a href="#cb2-156" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 8</span></span>
+<span id="cb2-157"><a href="#cb2-157" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon              tue                       wed   thu   fri  </span></span>
+<span id="cb2-158"><a href="#cb2-158" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;                     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-159"><a href="#cb2-159" tabindex="-1"></a><span class="co">#&gt; 1 R     1         1 Potions_Snape_NA Herbology_Sprout_NA       &lt;NA&gt;  Herb… Tran…</span></span>
+<span id="cb2-160"><a href="#cb2-160" tabindex="-1"></a><span class="co">#&gt; 2 R     1         2 &lt;NA&gt;             History of Magic_Binns_NA Tran… &lt;NA&gt;  Flyi…</span></span>
+<span id="cb2-161"><a href="#cb2-161" tabindex="-1"></a><span class="co">#&gt; 3 R     1         6 &lt;NA&gt;             &lt;NA&gt;                      DADA… &lt;NA&gt;  Char…</span></span>
+<span id="cb2-162"><a href="#cb2-162" tabindex="-1"></a><span class="co">#&gt; 4 R     1         7 Potions_Snape_NA Charms_Flitwick_NA        &lt;NA&gt;  Hist… &lt;NA&gt; </span></span>
+<span id="cb2-163"><a href="#cb2-163" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-164"><a href="#cb2-164" tabindex="-1"></a><span class="co">#&gt; $R.2</span></span>
+<span id="cb2-165"><a href="#cb2-165" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 8</span></span>
+<span id="cb2-166"><a href="#cb2-166" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                           tue          wed   thu   fri  </span></span>
+<span id="cb2-167"><a href="#cb2-167" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-168"><a href="#cb2-168" tabindex="-1"></a><span class="co">#&gt; 1 R     2         1 &lt;NA&gt;                          History of … Poti… Hist… &lt;NA&gt; </span></span>
+<span id="cb2-169"><a href="#cb2-169" tabindex="-1"></a><span class="co">#&gt; 2 R     2         2 &lt;NA&gt;                          &lt;NA&gt;         DADA… Tran… &lt;NA&gt; </span></span>
+<span id="cb2-170"><a href="#cb2-170" tabindex="-1"></a><span class="co">#&gt; 3 R     2         3 Transfiguration_McGonagall_NA &lt;NA&gt;         &lt;NA&gt;  Tran… DADA…</span></span>
+<span id="cb2-171"><a href="#cb2-171" tabindex="-1"></a><span class="co">#&gt; 4 R     2         6 DADA_DADA Teacher_NA          Potions_Sna… Char… &lt;NA&gt;  Herb…</span></span>
+<span id="cb2-172"><a href="#cb2-172" tabindex="-1"></a><span class="co">#&gt; 5 R     2         7 Charms_Flitwick_NA            Potions_Sna… Herb… &lt;NA&gt;  Herb…</span></span>
+<span id="cb2-173"><a href="#cb2-173" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-174"><a href="#cb2-174" tabindex="-1"></a><span class="co">#&gt; $R.3</span></span>
+<span id="cb2-175"><a href="#cb2-175" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb2-176"><a href="#cb2-176" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                                 tue   wed   thu   fri  </span></span>
+<span id="cb2-177"><a href="#cb2-177" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-178"><a href="#cb2-178" tabindex="-1"></a><span class="co">#&gt;  1 R     3         1 Runes_Batsheda Babbling_3_E2        &lt;NA&gt;  Tran… DADA… Arit…</span></span>
+<span id="cb2-179"><a href="#cb2-179" tabindex="-1"></a><span class="co">#&gt;  2 R     3         1 Divination_Div Teacher_3_E2         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  Mugg…</span></span>
+<span id="cb2-180"><a href="#cb2-180" tabindex="-1"></a><span class="co">#&gt;  3 R     3         2 Care of Magical Creatures_CoMC tea… Poti… Hist… Poti… Hist…</span></span>
+<span id="cb2-181"><a href="#cb2-181" tabindex="-1"></a><span class="co">#&gt;  4 R     3         3 Care of Magical Creatures_CoMC tea… Poti… Char… Care… Herb…</span></span>
+<span id="cb2-182"><a href="#cb2-182" tabindex="-1"></a><span class="co">#&gt;  5 R     3         5 Charms_Flitwick_NA                  DADA… Care… Herb… Rune…</span></span>
+<span id="cb2-183"><a href="#cb2-183" tabindex="-1"></a><span class="co">#&gt;  6 R     3         5 &lt;NA&gt;                                &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-184"><a href="#cb2-184" tabindex="-1"></a><span class="co">#&gt;  7 R     3         6 Arithmancy_Vector_3_E1              Herb… &lt;NA&gt;  &lt;NA&gt;  Tran…</span></span>
+<span id="cb2-185"><a href="#cb2-185" tabindex="-1"></a><span class="co">#&gt;  8 R     3         6 Muggle Studies_Burbage_3_E1         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-186"><a href="#cb2-186" tabindex="-1"></a><span class="co">#&gt;  9 R     3         7 Transfiguration_McGonagall_NA       Arit… Rune… DADA… Char…</span></span>
+<span id="cb2-187"><a href="#cb2-187" tabindex="-1"></a><span class="co">#&gt; 10 R     3         7 &lt;NA&gt;                                &lt;NA&gt;  Divi… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-188"><a href="#cb2-188" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-189"><a href="#cb2-189" tabindex="-1"></a><span class="co">#&gt; $R.4</span></span>
+<span id="cb2-190"><a href="#cb2-190" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 8</span></span>
+<span id="cb2-191"><a href="#cb2-191" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                           tue         wed   thu   fri  </span></span>
+<span id="cb2-192"><a href="#cb2-192" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-193"><a href="#cb2-193" tabindex="-1"></a><span class="co">#&gt;  1 R     4         1 &lt;NA&gt;                          &lt;NA&gt;        Care… &lt;NA&gt;  Care…</span></span>
+<span id="cb2-194"><a href="#cb2-194" tabindex="-1"></a><span class="co">#&gt;  2 R     4         2 Transfiguration_McGonagall_NA &lt;NA&gt;        &lt;NA&gt;  Char… DADA…</span></span>
+<span id="cb2-195"><a href="#cb2-195" tabindex="-1"></a><span class="co">#&gt;  3 R     4         3 Charms_Flitwick_NA            Charms_Fli… Herb… Rune… Hist…</span></span>
+<span id="cb2-196"><a href="#cb2-196" tabindex="-1"></a><span class="co">#&gt;  4 R     4         3 &lt;NA&gt;                          &lt;NA&gt;        &lt;NA&gt;  Divi… &lt;NA&gt; </span></span>
+<span id="cb2-197"><a href="#cb2-197" tabindex="-1"></a><span class="co">#&gt;  5 R     4         4 Herbology_Sprout_NA           Care of Ma… Tran… Rune… Tran…</span></span>
+<span id="cb2-198"><a href="#cb2-198" tabindex="-1"></a><span class="co">#&gt;  6 R     4         4 &lt;NA&gt;                          &lt;NA&gt;        &lt;NA&gt;  Divi… &lt;NA&gt; </span></span>
+<span id="cb2-199"><a href="#cb2-199" tabindex="-1"></a><span class="co">#&gt;  7 R     4         5 Arithmancy_Vector_4_E1        Potions_Sn… Hist… Poti… Herb…</span></span>
+<span id="cb2-200"><a href="#cb2-200" tabindex="-1"></a><span class="co">#&gt;  8 R     4         5 Muggle Studies_Burbage_4_E1   &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-201"><a href="#cb2-201" tabindex="-1"></a><span class="co">#&gt;  9 R     4         6 Runes_Batsheda Babbling_4_E2  DADA_DADA … Arit… Poti… &lt;NA&gt; </span></span>
+<span id="cb2-202"><a href="#cb2-202" tabindex="-1"></a><span class="co">#&gt; 10 R     4         6 Divination_Div Teacher_4_E2   &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-203"><a href="#cb2-203" tabindex="-1"></a><span class="co">#&gt; 11 R     4         7 &lt;NA&gt;                          DADA_DADA … Arit… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-204"><a href="#cb2-204" tabindex="-1"></a><span class="co">#&gt; 12 R     4         7 &lt;NA&gt;                          &lt;NA&gt;        Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-205"><a href="#cb2-205" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-206"><a href="#cb2-206" tabindex="-1"></a><span class="co">#&gt; $R.5</span></span>
+<span id="cb2-207"><a href="#cb2-207" tabindex="-1"></a><span class="co">#&gt; # A tibble: 11 × 8</span></span>
+<span id="cb2-208"><a href="#cb2-208" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                       tue             wed   thu   fri  </span></span>
+<span id="cb2-209"><a href="#cb2-209" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                     &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-210"><a href="#cb2-210" tabindex="-1"></a><span class="co">#&gt;  1 R     5         1 History of Magic_Binns_NA Runes_Batsheda… Hist… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-211"><a href="#cb2-211" tabindex="-1"></a><span class="co">#&gt;  2 R     5         1 &lt;NA&gt;                      Divination_Div… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-212"><a href="#cb2-212" tabindex="-1"></a><span class="co">#&gt;  3 R     5         2 Arithmancy_Vector_5_E1    Herbology_Spro… &lt;NA&gt;  &lt;NA&gt;  Arit…</span></span>
+<span id="cb2-213"><a href="#cb2-213" tabindex="-1"></a><span class="co">#&gt;  4 R     5         2 &lt;NA&gt;                      &lt;NA&gt;            &lt;NA&gt;  &lt;NA&gt;  Mugg…</span></span>
+<span id="cb2-214"><a href="#cb2-214" tabindex="-1"></a><span class="co">#&gt;  5 R     5         3 DADA_DADA Teacher_NA      Transfiguratio… Care… Char… &lt;NA&gt; </span></span>
+<span id="cb2-215"><a href="#cb2-215" tabindex="-1"></a><span class="co">#&gt;  6 R     5         4 DADA_DADA Teacher_NA      Transfiguratio… Care… Tran… Rune…</span></span>
+<span id="cb2-216"><a href="#cb2-216" tabindex="-1"></a><span class="co">#&gt;  7 R     5         4 &lt;NA&gt;                      &lt;NA&gt;            &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-217"><a href="#cb2-217" tabindex="-1"></a><span class="co">#&gt;  8 R     5         5 Potions_Snape_NA          Charms_Flitwic… Arit… Rune… DADA…</span></span>
+<span id="cb2-218"><a href="#cb2-218" tabindex="-1"></a><span class="co">#&gt;  9 R     5         5 &lt;NA&gt;                      &lt;NA&gt;            Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-219"><a href="#cb2-219" tabindex="-1"></a><span class="co">#&gt; 10 R     5         6 Potions_Snape_NA          Charms_Flitwic… &lt;NA&gt;  Herb… Care…</span></span>
+<span id="cb2-220"><a href="#cb2-220" tabindex="-1"></a><span class="co">#&gt; 11 R     5         7 History of Magic_Binns_NA &lt;NA&gt;            &lt;NA&gt;  Herb… Poti…</span></span>
+<span id="cb2-221"><a href="#cb2-221" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-222"><a href="#cb2-222" tabindex="-1"></a><span class="co">#&gt; $S.1</span></span>
+<span id="cb2-223"><a href="#cb2-223" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 8</span></span>
+<span id="cb2-224"><a href="#cb2-224" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                  tue                   wed   thu   fri  </span></span>
+<span id="cb2-225"><a href="#cb2-225" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;                 &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-226"><a href="#cb2-226" tabindex="-1"></a><span class="co">#&gt; 1 S     1         1 DADA_DADA Teacher_NA Herbology_Sprout_NA   &lt;NA&gt;  Herb… Tran…</span></span>
+<span id="cb2-227"><a href="#cb2-227" tabindex="-1"></a><span class="co">#&gt; 2 S     1         2 &lt;NA&gt;                 Charms_Flitwick_NA    Tran… Flyi… &lt;NA&gt; </span></span>
+<span id="cb2-228"><a href="#cb2-228" tabindex="-1"></a><span class="co">#&gt; 3 S     1         6 &lt;NA&gt;                 &lt;NA&gt;                  Poti… &lt;NA&gt;  Hist…</span></span>
+<span id="cb2-229"><a href="#cb2-229" tabindex="-1"></a><span class="co">#&gt; 4 S     1         7 &lt;NA&gt;                 History of Magic_Bin… Poti… Char… &lt;NA&gt; </span></span>
+<span id="cb2-230"><a href="#cb2-230" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-231"><a href="#cb2-231" tabindex="-1"></a><span class="co">#&gt; $S.2</span></span>
+<span id="cb2-232"><a href="#cb2-232" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 8</span></span>
+<span id="cb2-233"><a href="#cb2-233" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                           tue          wed   thu   fri  </span></span>
+<span id="cb2-234"><a href="#cb2-234" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-235"><a href="#cb2-235" tabindex="-1"></a><span class="co">#&gt; 1 S     2         1 &lt;NA&gt;                          Charms_Flit… &lt;NA&gt;  Char… &lt;NA&gt; </span></span>
+<span id="cb2-236"><a href="#cb2-236" tabindex="-1"></a><span class="co">#&gt; 2 S     2         2 History of Magic_Binns_NA     DADA_DADA T… Poti… Tran… Poti…</span></span>
+<span id="cb2-237"><a href="#cb2-237" tabindex="-1"></a><span class="co">#&gt; 3 S     2         3 Transfiguration_McGonagall_NA DADA_DADA T… &lt;NA&gt;  Tran… Poti…</span></span>
+<span id="cb2-238"><a href="#cb2-238" tabindex="-1"></a><span class="co">#&gt; 4 S     2         6 &lt;NA&gt;                          &lt;NA&gt;         Hist… DADA… Herb…</span></span>
+<span id="cb2-239"><a href="#cb2-239" tabindex="-1"></a><span class="co">#&gt; 5 S     2         7 &lt;NA&gt;                          &lt;NA&gt;         Herb… &lt;NA&gt;  Herb…</span></span>
+<span id="cb2-240"><a href="#cb2-240" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-241"><a href="#cb2-241" tabindex="-1"></a><span class="co">#&gt; $S.3</span></span>
+<span id="cb2-242"><a href="#cb2-242" tabindex="-1"></a><span class="co">#&gt; # A tibble: 11 × 8</span></span>
+<span id="cb2-243"><a href="#cb2-243" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                           tue         wed   thu   fri  </span></span>
+<span id="cb2-244"><a href="#cb2-244" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                         &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-245"><a href="#cb2-245" tabindex="-1"></a><span class="co">#&gt;  1 S     3         1 Charms_Flitwick_NA            DADA_DADA … Tran… Care… Arit…</span></span>
+<span id="cb2-246"><a href="#cb2-246" tabindex="-1"></a><span class="co">#&gt;  2 S     3         1 &lt;NA&gt;                          &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  Mugg…</span></span>
+<span id="cb2-247"><a href="#cb2-247" tabindex="-1"></a><span class="co">#&gt;  3 S     3         2 Potions_Snape_NA              Care of Ma… Char… DADA… Char…</span></span>
+<span id="cb2-248"><a href="#cb2-248" tabindex="-1"></a><span class="co">#&gt;  4 S     3         3 Potions_Snape_NA              Care of Ma… Rune… DADA… Herb…</span></span>
+<span id="cb2-249"><a href="#cb2-249" tabindex="-1"></a><span class="co">#&gt;  5 S     3         3 &lt;NA&gt;                          &lt;NA&gt;        Divi… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-250"><a href="#cb2-250" tabindex="-1"></a><span class="co">#&gt;  6 S     3         5 Runes_Batsheda Babbling_3_E2  &lt;NA&gt;        Poti… Herb… Hist…</span></span>
+<span id="cb2-251"><a href="#cb2-251" tabindex="-1"></a><span class="co">#&gt;  7 S     3         5 Divination_Div Teacher_3_E2   &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-252"><a href="#cb2-252" tabindex="-1"></a><span class="co">#&gt;  8 S     3         6 Arithmancy_Vector_3_E1        Herbology_… &lt;NA&gt;  &lt;NA&gt;  Tran…</span></span>
+<span id="cb2-253"><a href="#cb2-253" tabindex="-1"></a><span class="co">#&gt;  9 S     3         6 Muggle Studies_Burbage_3_E1   &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-254"><a href="#cb2-254" tabindex="-1"></a><span class="co">#&gt; 10 S     3         7 Transfiguration_McGonagall_NA Arithmancy… Hist… Care… Rune…</span></span>
+<span id="cb2-255"><a href="#cb2-255" tabindex="-1"></a><span class="co">#&gt; 11 S     3         7 &lt;NA&gt;                          &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;  Divi…</span></span>
+<span id="cb2-256"><a href="#cb2-256" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-257"><a href="#cb2-257" tabindex="-1"></a><span class="co">#&gt; $S.4</span></span>
+<span id="cb2-258"><a href="#cb2-258" tabindex="-1"></a><span class="co">#&gt; # A tibble: 11 × 8</span></span>
+<span id="cb2-259"><a href="#cb2-259" tabindex="-1"></a><span class="co">#&gt;    house grade  hour mon                                 tue   wed   thu   fri  </span></span>
+<span id="cb2-260"><a href="#cb2-260" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-261"><a href="#cb2-261" tabindex="-1"></a><span class="co">#&gt;  1 S     4         1 &lt;NA&gt;                                Poti… &lt;NA&gt;  Poti… DADA…</span></span>
+<span id="cb2-262"><a href="#cb2-262" tabindex="-1"></a><span class="co">#&gt;  2 S     4         2 Transfiguration_McGonagall_NA       Rune… &lt;NA&gt;  Rune… &lt;NA&gt; </span></span>
+<span id="cb2-263"><a href="#cb2-263" tabindex="-1"></a><span class="co">#&gt;  3 S     4         2 &lt;NA&gt;                                Divi… &lt;NA&gt;  Divi… &lt;NA&gt; </span></span>
+<span id="cb2-264"><a href="#cb2-264" tabindex="-1"></a><span class="co">#&gt;  4 S     4         3 History of Magic_Binns_NA           Rune… Herb… &lt;NA&gt;  Char…</span></span>
+<span id="cb2-265"><a href="#cb2-265" tabindex="-1"></a><span class="co">#&gt;  5 S     4         3 &lt;NA&gt;                                Divi… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-266"><a href="#cb2-266" tabindex="-1"></a><span class="co">#&gt;  6 S     4         4 Herbology_Sprout_NA                 DADA… Tran… Hist… Tran…</span></span>
+<span id="cb2-267"><a href="#cb2-267" tabindex="-1"></a><span class="co">#&gt;  7 S     4         5 Arithmancy_Vector_4_E1              Care… Char… Care… Herb…</span></span>
+<span id="cb2-268"><a href="#cb2-268" tabindex="-1"></a><span class="co">#&gt;  8 S     4         5 Muggle Studies_Burbage_4_E1         &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-269"><a href="#cb2-269" tabindex="-1"></a><span class="co">#&gt;  9 S     4         6 Charms_Flitwick_NA                  &lt;NA&gt;  Arit… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-270"><a href="#cb2-270" tabindex="-1"></a><span class="co">#&gt; 10 S     4         7 Care of Magical Creatures_CoMC tea… &lt;NA&gt;  Arit… Poti… DADA…</span></span>
+<span id="cb2-271"><a href="#cb2-271" tabindex="-1"></a><span class="co">#&gt; 11 S     4         7 &lt;NA&gt;                                &lt;NA&gt;  Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-272"><a href="#cb2-272" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-273"><a href="#cb2-273" tabindex="-1"></a><span class="co">#&gt; $S.5</span></span>
+<span id="cb2-274"><a href="#cb2-274" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 8</span></span>
+<span id="cb2-275"><a href="#cb2-275" tabindex="-1"></a><span class="co">#&gt;   house grade  hour mon                                  tue   wed   thu   fri  </span></span>
+<span id="cb2-276"><a href="#cb2-276" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;chr&gt;                                &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-277"><a href="#cb2-277" tabindex="-1"></a><span class="co">#&gt; 1 S     5         1 &lt;NA&gt;                                 &lt;NA&gt;  Char… &lt;NA&gt;  Rune…</span></span>
+<span id="cb2-278"><a href="#cb2-278" tabindex="-1"></a><span class="co">#&gt; 2 S     5         2 Arithmancy_Vector_5_E1               Herb… Care… Hist… Arit…</span></span>
+<span id="cb2-279"><a href="#cb2-279" tabindex="-1"></a><span class="co">#&gt; 3 S     5         2 &lt;NA&gt;                                 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  Mugg…</span></span>
+<span id="cb2-280"><a href="#cb2-280" tabindex="-1"></a><span class="co">#&gt; 4 S     5         3 &lt;NA&gt;                                 Tran… DADA… Hist… Divi…</span></span>
+<span id="cb2-281"><a href="#cb2-281" tabindex="-1"></a><span class="co">#&gt; 5 S     5         4 Potions_Snape_NA                     Tran… DADA… Tran… Char…</span></span>
+<span id="cb2-282"><a href="#cb2-282" tabindex="-1"></a><span class="co">#&gt; 6 S     5         5 DADA_DADA Teacher_NA                 Hist… Arit… &lt;NA&gt;  Poti…</span></span>
+<span id="cb2-283"><a href="#cb2-283" tabindex="-1"></a><span class="co">#&gt; 7 S     5         5 &lt;NA&gt;                                 &lt;NA&gt;  Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
+<span id="cb2-284"><a href="#cb2-284" tabindex="-1"></a><span class="co">#&gt; 8 S     5         6 Care of Magical Creatures_CoMC teac… Rune… &lt;NA&gt;  Herb… Poti…</span></span>
+<span id="cb2-285"><a href="#cb2-285" tabindex="-1"></a><span class="co">#&gt; 9 S     5         7 Divination_Div Teacher_5_E2          Rune… Char… Herb… Care…</span></span>
+<span id="cb2-286"><a href="#cb2-286" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
+<span id="cb2-287"><a href="#cb2-287" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;homeworld&quot;</span>, <span class="at">col =</span> <span class="st">&quot;species&quot;</span>, <span class="at">value =</span> <span class="st">&quot;name&quot;</span>, <span class="at">split =</span> <span class="st">&quot;sex&quot;</span>)</span>
+<span id="cb2-288"><a href="#cb2-288" tabindex="-1"></a><span class="co">#&gt; $female</span></span>
+<span id="cb2-289"><a href="#cb2-289" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 9</span></span>
+<span id="cb2-290"><a href="#cb2-290" tabindex="-1"></a><span class="co">#&gt;    sex   homeworld Clawdite Human Kaminoan Mirialan Tholothian Togruta `Twi&#39;lek`</span></span>
+<span id="cb2-291"><a href="#cb2-291" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;    </span></span>
+<span id="cb2-292"><a href="#cb2-292" tabindex="-1"></a><span class="co">#&gt;  1 fema… Alderaan  &lt;NA&gt;     Leia… &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-293"><a href="#cb2-293" tabindex="-1"></a><span class="co">#&gt;  2 fema… Chandrila &lt;NA&gt;     Mon … &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-294"><a href="#cb2-294" tabindex="-1"></a><span class="co">#&gt;  3 fema… Coruscant &lt;NA&gt;     Joca… &lt;NA&gt;     &lt;NA&gt;     Adi Gallia &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-295"><a href="#cb2-295" tabindex="-1"></a><span class="co">#&gt;  4 fema… Kamino    &lt;NA&gt;     &lt;NA&gt;  Taun We  &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-296"><a href="#cb2-296" tabindex="-1"></a><span class="co">#&gt;  5 fema… Mirial    &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;     Luminar… &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-297"><a href="#cb2-297" tabindex="-1"></a><span class="co">#&gt;  6 fema… Mirial    &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;     Barriss… &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-298"><a href="#cb2-298" tabindex="-1"></a><span class="co">#&gt;  7 fema… Naboo     &lt;NA&gt;     Padm… &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-299"><a href="#cb2-299" tabindex="-1"></a><span class="co">#&gt;  8 fema… Naboo     &lt;NA&gt;     Dormé &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-300"><a href="#cb2-300" tabindex="-1"></a><span class="co">#&gt;  9 fema… Ryloth    &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    Ayla Sec…</span></span>
+<span id="cb2-301"><a href="#cb2-301" tabindex="-1"></a><span class="co">#&gt; 10 fema… Shili     &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       Shaak … &lt;NA&gt;     </span></span>
+<span id="cb2-302"><a href="#cb2-302" tabindex="-1"></a><span class="co">#&gt; 11 fema… Tatooine  &lt;NA&gt;     Beru… &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-303"><a href="#cb2-303" tabindex="-1"></a><span class="co">#&gt; 12 fema… Tatooine  &lt;NA&gt;     Shmi… &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-304"><a href="#cb2-304" tabindex="-1"></a><span class="co">#&gt; 13 fema… Zolan     Zam Wes… &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-305"><a href="#cb2-305" tabindex="-1"></a><span class="co">#&gt; 14 fema… &lt;NA&gt;      &lt;NA&gt;     Rey   &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-306"><a href="#cb2-306" tabindex="-1"></a><span class="co">#&gt; 15 fema… &lt;NA&gt;      &lt;NA&gt;     Capt… &lt;NA&gt;     &lt;NA&gt;     &lt;NA&gt;       &lt;NA&gt;    &lt;NA&gt;     </span></span>
+<span id="cb2-307"><a href="#cb2-307" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-308"><a href="#cb2-308" tabindex="-1"></a><span class="co">#&gt; $hermaphroditic</span></span>
+<span id="cb2-309"><a href="#cb2-309" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span id="cb2-310"><a href="#cb2-310" tabindex="-1"></a><span class="co">#&gt;   sex            homeworld Hutt                 </span></span>
+<span id="cb2-311"><a href="#cb2-311" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;                </span></span>
+<span id="cb2-312"><a href="#cb2-312" tabindex="-1"></a><span class="co">#&gt; 1 hermaphroditic Nal Hutta Jabba Desilijic Tiure</span></span>
+<span id="cb2-313"><a href="#cb2-313" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-314"><a href="#cb2-314" tabindex="-1"></a><span class="co">#&gt; $male</span></span>
+<span id="cb2-315"><a href="#cb2-315" tabindex="-1"></a><span class="co">#&gt; # A tibble: 55 × 33</span></span>
+<span id="cb2-316"><a href="#cb2-316" tabindex="-1"></a><span class="co">#&gt;    sex   homeworld  Aleena Besalisk Cerean Chagrian Dug   Ewok  Geonosian Gungan</span></span>
+<span id="cb2-317"><a href="#cb2-317" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; </span></span>
+<span id="cb2-318"><a href="#cb2-318" tabindex="-1"></a><span class="co">#&gt;  1 male  Alderaan   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-319"><a href="#cb2-319" tabindex="-1"></a><span class="co">#&gt;  2 male  Alderaan   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-320"><a href="#cb2-320" tabindex="-1"></a><span class="co">#&gt;  3 male  Aleen Min… Ratts… &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-321"><a href="#cb2-321" tabindex="-1"></a><span class="co">#&gt;  4 male  Bespin     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-322"><a href="#cb2-322" tabindex="-1"></a><span class="co">#&gt;  5 male  Cato Neim… &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-323"><a href="#cb2-323" tabindex="-1"></a><span class="co">#&gt;  6 male  Cerea      &lt;NA&gt;   &lt;NA&gt;     Ki-Ad… &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-324"><a href="#cb2-324" tabindex="-1"></a><span class="co">#&gt;  7 male  Champala   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   Mas Ame… &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-325"><a href="#cb2-325" tabindex="-1"></a><span class="co">#&gt;  8 male  Concord D… &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-326"><a href="#cb2-326" tabindex="-1"></a><span class="co">#&gt;  9 male  Corellia   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-327"><a href="#cb2-327" tabindex="-1"></a><span class="co">#&gt; 10 male  Corellia   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      &lt;NA&gt;  </span></span>
+<span id="cb2-328"><a href="#cb2-328" tabindex="-1"></a><span class="co">#&gt; # ℹ 45 more rows</span></span>
+<span id="cb2-329"><a href="#cb2-329" tabindex="-1"></a><span class="co">#&gt; # ℹ 23 more variables: Human &lt;chr&gt;, Iktotchi &lt;chr&gt;, Kaleesh &lt;chr&gt;,</span></span>
+<span id="cb2-330"><a href="#cb2-330" tabindex="-1"></a><span class="co">#&gt; #   Kaminoan &lt;chr&gt;, `Kel Dor` &lt;chr&gt;, `Mon Calamari` &lt;chr&gt;, Muun &lt;chr&gt;,</span></span>
+<span id="cb2-331"><a href="#cb2-331" tabindex="-1"></a><span class="co">#&gt; #   Nautolan &lt;chr&gt;, Neimodian &lt;chr&gt;, `Pau&#39;an` &lt;chr&gt;, Quermian &lt;chr&gt;,</span></span>
+<span id="cb2-332"><a href="#cb2-332" tabindex="-1"></a><span class="co">#&gt; #   Rodian &lt;chr&gt;, Skakoan &lt;chr&gt;, Sullustan &lt;chr&gt;, Toong &lt;chr&gt;, Toydarian &lt;chr&gt;,</span></span>
+<span id="cb2-333"><a href="#cb2-333" tabindex="-1"></a><span class="co">#&gt; #   Trandoshan &lt;chr&gt;, `Twi&#39;lek` &lt;chr&gt;, Vulptereen &lt;chr&gt;, Wookiee &lt;chr&gt;,</span></span>
+<span id="cb2-334"><a href="#cb2-334" tabindex="-1"></a><span class="co">#&gt; #   Xexto &lt;chr&gt;, `Yoda&#39;s species` &lt;chr&gt;, Zabrak &lt;chr&gt;</span></span>
+<span id="cb2-335"><a href="#cb2-335" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-336"><a href="#cb2-336" tabindex="-1"></a><span class="co">#&gt; $none</span></span>
+<span id="cb2-337"><a href="#cb2-337" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb2-338"><a href="#cb2-338" tabindex="-1"></a><span class="co">#&gt;   sex   homeworld Droid </span></span>
+<span id="cb2-339"><a href="#cb2-339" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; </span></span>
+<span id="cb2-340"><a href="#cb2-340" tabindex="-1"></a><span class="co">#&gt; 1 none  Naboo     R2-D2 </span></span>
+<span id="cb2-341"><a href="#cb2-341" tabindex="-1"></a><span class="co">#&gt; 2 none  Tatooine  C-3PO </span></span>
+<span id="cb2-342"><a href="#cb2-342" tabindex="-1"></a><span class="co">#&gt; 3 none  Tatooine  R5-D4 </span></span>
+<span id="cb2-343"><a href="#cb2-343" tabindex="-1"></a><span class="co">#&gt; 4 none  &lt;NA&gt;      IG-88 </span></span>
+<span id="cb2-344"><a href="#cb2-344" tabindex="-1"></a><span class="co">#&gt; 5 none  &lt;NA&gt;      R4-P17</span></span>
+<span id="cb2-345"><a href="#cb2-345" tabindex="-1"></a><span class="co">#&gt; 6 none  &lt;NA&gt;      BB8</span></span>
+<span id="cb2-346"><a href="#cb2-346" tabindex="-1"></a>msleep <span class="sc">%&gt;%</span></span>
+<span id="cb2-347"><a href="#cb2-347" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;vore&quot;</span>, <span class="at">col =</span> <span class="st">&quot;conservation&quot;</span>, <span class="at">value =</span> <span class="st">&quot;name&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-348"><a href="#cb2-348" tabindex="-1"></a>  <span class="fu">na2empty</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-349"><a href="#cb2-349" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="fu">nrow</span>(.))</span>
+<span id="cb2-350"><a href="#cb2-350" tabindex="-1"></a><span class="co">#&gt; # A tibble: 33 × 8</span></span>
+<span id="cb2-351"><a href="#cb2-351" tabindex="-1"></a><span class="co">#&gt;    vore      cd            domesticated   en             lc    nt    vu    `NA` </span></span>
+<span id="cb2-352"><a href="#cb2-352" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
+<span id="cb2-353"><a href="#cb2-353" tabindex="-1"></a><span class="co">#&gt;  1 &quot;carni&quot;   &quot;Pilot whale&quot; &quot;Dog&quot;          &quot;Tiger&quot;        &quot;Che… &quot;Jag… &quot;Nor… &quot;Slo…</span></span>
+<span id="cb2-354"><a href="#cb2-354" tabindex="-1"></a><span class="co">#&gt;  2 &quot;carni&quot;   &quot;&quot;            &quot;Domestic cat&quot; &quot;&quot;             &quot;Lon… &quot;&quot;    &quot;Lio… &quot;Bot…</span></span>
+<span id="cb2-355"><a href="#cb2-355" tabindex="-1"></a><span class="co">#&gt;  3 &quot;carni&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Gra… &quot;&quot;    &quot;Cas… &quot;Gen…</span></span>
+<span id="cb2-356"><a href="#cb2-356" tabindex="-1"></a><span class="co">#&gt;  4 &quot;carni&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Thi… &quot;&quot;    &quot;Com… &quot;Arc…</span></span>
+<span id="cb2-357"><a href="#cb2-357" tabindex="-1"></a><span class="co">#&gt;  5 &quot;carni&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Nor… &quot;&quot;    &quot;&quot;    &quot;Red…</span></span>
+<span id="cb2-358"><a href="#cb2-358" tabindex="-1"></a><span class="co">#&gt;  6 &quot;herbi&quot;   &quot;Giraffe&quot;     &quot;Cow&quot;          &quot;Asian elepha… &quot;Roe… &quot;Mou… &quot;Mon… &quot;Thr…</span></span>
+<span id="cb2-359"><a href="#cb2-359" tabindex="-1"></a><span class="co">#&gt;  7 &quot;herbi&quot;   &quot;&quot;            &quot;Guinea pig&quot;   &quot;Golden hamst… &quot;Goa… &quot;Hou… &quot;Afr… &quot;Wes…</span></span>
+<span id="cb2-360"><a href="#cb2-360" tabindex="-1"></a><span class="co">#&gt;  8 &quot;herbi&quot;   &quot;&quot;            &quot;Chinchilla&quot;   &quot;&quot;             &quot;Tre… &quot;Rou… &quot;Bra… &quot;Vol…</span></span>
+<span id="cb2-361"><a href="#cb2-361" tabindex="-1"></a><span class="co">#&gt;  9 &quot;herbi&quot;   &quot;&quot;            &quot;Horse&quot;        &quot;&quot;             &quot;Gra… &quot;&quot;    &quot;&quot;    &quot;Pot…</span></span>
+<span id="cb2-362"><a href="#cb2-362" tabindex="-1"></a><span class="co">#&gt; 10 &quot;herbi&quot;   &quot;&quot;            &quot;Donkey&quot;       &quot;&quot;             &quot;Mon… &quot;&quot;    &quot;&quot;    &quot;Cot…</span></span>
+<span id="cb2-363"><a href="#cb2-363" tabindex="-1"></a><span class="co">#&gt; 11 &quot;herbi&quot;   &quot;&quot;            &quot;Rabbit&quot;       &quot;&quot;             &quot;Deg… &quot;&quot;    &quot;&quot;    &quot;Eas…</span></span>
+<span id="cb2-364"><a href="#cb2-364" tabindex="-1"></a><span class="co">#&gt; 12 &quot;herbi&quot;   &quot;&quot;            &quot;Sheep&quot;        &quot;&quot;             &quot;Lab… &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb2-365"><a href="#cb2-365" tabindex="-1"></a><span class="co">#&gt; 13 &quot;herbi&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Arc… &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb2-366"><a href="#cb2-366" tabindex="-1"></a><span class="co">#&gt; 14 &quot;herbi&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Thi… &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb2-367"><a href="#cb2-367" tabindex="-1"></a><span class="co">#&gt; 15 &quot;herbi&quot;   &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Gol… &quot;&quot;    &quot;&quot;    &quot;&quot;   </span></span>
+<span id="cb2-368"><a href="#cb2-368" tabindex="-1"></a><span class="co">#&gt; 16 &quot;insecti&quot; &quot;&quot;            &quot;&quot;             &quot;Giant armadi… &quot;Big… &quot;&quot;    &quot;&quot;    &quot;Lit…</span></span>
+<span id="cb2-369"><a href="#cb2-369" tabindex="-1"></a><span class="co">#&gt; 17 &quot;insecti&quot; &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Eas… &quot;&quot;    &quot;&quot;    &quot;Sho…</span></span>
+<span id="cb2-370"><a href="#cb2-370" tabindex="-1"></a><span class="co">#&gt; 18 &quot;omni&quot;    &quot;&quot;            &quot;Pig&quot;          &quot;&quot;             &quot;Gre… &quot;&quot;    &quot;&quot;    &quot;Owl…</span></span>
+<span id="cb2-371"><a href="#cb2-371" tabindex="-1"></a><span class="co">#&gt; 19 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Gri… &quot;&quot;    &quot;&quot;    &quot;Afr…</span></span>
+<span id="cb2-372"><a href="#cb2-372" tabindex="-1"></a><span class="co">#&gt; 20 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Sta… &quot;&quot;    &quot;&quot;    &quot;Gal…</span></span>
+<span id="cb2-373"><a href="#cb2-373" tabindex="-1"></a><span class="co">#&gt; 21 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Les… &quot;&quot;    &quot;&quot;    &quot;Hum…</span></span>
+<span id="cb2-374"><a href="#cb2-374" tabindex="-1"></a><span class="co">#&gt; 22 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Nor… &quot;&quot;    &quot;&quot;    &quot;Mac…</span></span>
+<span id="cb2-375"><a href="#cb2-375" tabindex="-1"></a><span class="co">#&gt; 23 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Eur… &quot;&quot;    &quot;&quot;    &quot;Chi…</span></span>
+<span id="cb2-376"><a href="#cb2-376" tabindex="-1"></a><span class="co">#&gt; 24 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Pat… &quot;&quot;    &quot;&quot;    &quot;Bab…</span></span>
+<span id="cb2-377"><a href="#cb2-377" tabindex="-1"></a><span class="co">#&gt; 25 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Pot… &quot;&quot;    &quot;&quot;    &quot;Afr…</span></span>
+<span id="cb2-378"><a href="#cb2-378" tabindex="-1"></a><span class="co">#&gt; 26 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Squ…</span></span>
+<span id="cb2-379"><a href="#cb2-379" tabindex="-1"></a><span class="co">#&gt; 27 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Ten…</span></span>
+<span id="cb2-380"><a href="#cb2-380" tabindex="-1"></a><span class="co">#&gt; 28 &quot;omni&quot;    &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Tre…</span></span>
+<span id="cb2-381"><a href="#cb2-381" tabindex="-1"></a><span class="co">#&gt; 29 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Des… &quot;&quot;    &quot;&quot;    &quot;Ves…</span></span>
+<span id="cb2-382"><a href="#cb2-382" tabindex="-1"></a><span class="co">#&gt; 30 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;Roc… &quot;&quot;    &quot;&quot;    &quot;Dee…</span></span>
+<span id="cb2-383"><a href="#cb2-383" tabindex="-1"></a><span class="co">#&gt; 31 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Pha…</span></span>
+<span id="cb2-384"><a href="#cb2-384" tabindex="-1"></a><span class="co">#&gt; 32 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Mol…</span></span>
+<span id="cb2-385"><a href="#cb2-385" tabindex="-1"></a><span class="co">#&gt; 33 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Mus…</span></span>
+<span id="cb2-386"><a href="#cb2-386" tabindex="-1"></a><span class="fu">as_tibble</span>(Titanic) <span class="sc">%&gt;%</span></span>
+<span id="cb2-387"><a href="#cb2-387" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;Sex&quot;</span>, <span class="st">&quot;Survived&quot;</span>), <span class="at">value =</span> <span class="st">&quot;n&quot;</span>, <span class="at">split =</span> <span class="st">&quot;Class&quot;</span>)</span>
+<span id="cb2-388"><a href="#cb2-388" tabindex="-1"></a><span class="co">#&gt; $`1st`</span></span>
+<span id="cb2-389"><a href="#cb2-389" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb2-390"><a href="#cb2-390" tabindex="-1"></a><span class="co">#&gt;   Class Age   Female_No Female_Yes Male_No Male_Yes</span></span>
+<span id="cb2-391"><a href="#cb2-391" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb2-392"><a href="#cb2-392" tabindex="-1"></a><span class="co">#&gt; 1 1st   Adult         4        140     118       57</span></span>
+<span id="cb2-393"><a href="#cb2-393" tabindex="-1"></a><span class="co">#&gt; 2 1st   Child         0          1       0        5</span></span>
+<span id="cb2-394"><a href="#cb2-394" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-395"><a href="#cb2-395" tabindex="-1"></a><span class="co">#&gt; $`2nd`</span></span>
+<span id="cb2-396"><a href="#cb2-396" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb2-397"><a href="#cb2-397" tabindex="-1"></a><span class="co">#&gt;   Class Age   Female_No Female_Yes Male_No Male_Yes</span></span>
+<span id="cb2-398"><a href="#cb2-398" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb2-399"><a href="#cb2-399" tabindex="-1"></a><span class="co">#&gt; 1 2nd   Adult        13         80     154       14</span></span>
+<span id="cb2-400"><a href="#cb2-400" tabindex="-1"></a><span class="co">#&gt; 2 2nd   Child         0         13       0       11</span></span>
+<span id="cb2-401"><a href="#cb2-401" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-402"><a href="#cb2-402" tabindex="-1"></a><span class="co">#&gt; $`3rd`</span></span>
+<span id="cb2-403"><a href="#cb2-403" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb2-404"><a href="#cb2-404" tabindex="-1"></a><span class="co">#&gt;   Class Age   Female_No Female_Yes Male_No Male_Yes</span></span>
+<span id="cb2-405"><a href="#cb2-405" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb2-406"><a href="#cb2-406" tabindex="-1"></a><span class="co">#&gt; 1 3rd   Adult        89         76     387       75</span></span>
+<span id="cb2-407"><a href="#cb2-407" tabindex="-1"></a><span class="co">#&gt; 2 3rd   Child        17         14      35       13</span></span>
+<span id="cb2-408"><a href="#cb2-408" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-409"><a href="#cb2-409" tabindex="-1"></a><span class="co">#&gt; $Crew</span></span>
+<span id="cb2-410"><a href="#cb2-410" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
+<span id="cb2-411"><a href="#cb2-411" tabindex="-1"></a><span class="co">#&gt;   Class Age   Female_No Female_Yes Male_No Male_Yes</span></span>
+<span id="cb2-412"><a href="#cb2-412" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb2-413"><a href="#cb2-413" tabindex="-1"></a><span class="co">#&gt; 1 Crew  Adult         3         20     670      192</span></span>
+<span id="cb2-414"><a href="#cb2-414" tabindex="-1"></a><span class="co">#&gt; 2 Crew  Child         0          0       0        0</span></span>
+<span id="cb2-415"><a href="#cb2-415" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span></span>
+<span id="cb2-416"><a href="#cb2-416" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;cut&quot;</span>, <span class="at">col =</span> <span class="st">&quot;color&quot;</span>, <span class="at">value =</span> <span class="st">&quot;price&quot;</span>, <span class="at">split =</span> <span class="st">&quot;clarity&quot;</span>)</span>
+<span id="cb2-417"><a href="#cb2-417" tabindex="-1"></a><span class="co">#&gt; $I1</span></span>
+<span id="cb2-418"><a href="#cb2-418" tabindex="-1"></a><span class="co">#&gt; # A tibble: 176 × 9</span></span>
+<span id="cb2-419"><a href="#cb2-419" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-420"><a href="#cb2-420" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-421"><a href="#cb2-421" tabindex="-1"></a><span class="co">#&gt;  1 I1      Fair   5460  2788  2809  2808  2892  2935  3011</span></span>
+<span id="cb2-422"><a href="#cb2-422" tabindex="-1"></a><span class="co">#&gt;  2 I1      Fair   5617  3692  3734  4167  2964  3011  4284</span></span>
+<span id="cb2-423"><a href="#cb2-423" tabindex="-1"></a><span class="co">#&gt;  3 I1      Fair  15964  1232  4320  4277  2968  3745  5083</span></span>
+<span id="cb2-424"><a href="#cb2-424" tabindex="-1"></a><span class="co">#&gt;  4 I1      Fair   2491  1262   584  4849  2999  4368  5240</span></span>
+<span id="cb2-425"><a href="#cb2-425" tabindex="-1"></a><span class="co">#&gt;  5 I1      Fair     NA  1273  4698  6315  3175  4704  5405</span></span>
+<span id="cb2-426"><a href="#cb2-426" tabindex="-1"></a><span class="co">#&gt;  6 I1      Fair     NA  1865  5554  6346  3504  5040  5430</span></span>
+<span id="cb2-427"><a href="#cb2-427" tabindex="-1"></a><span class="co">#&gt;  7 I1      Fair     NA  2036  6532  6377  3765  5074  5607</span></span>
+<span id="cb2-428"><a href="#cb2-428" tabindex="-1"></a><span class="co">#&gt;  8 I1      Fair     NA  2138  6753  6503  4140  5667  5733</span></span>
+<span id="cb2-429"><a href="#cb2-429" tabindex="-1"></a><span class="co">#&gt;  9 I1      Fair     NA  2571  7019  6597  4145  5696  5859</span></span>
+<span id="cb2-430"><a href="#cb2-430" tabindex="-1"></a><span class="co">#&gt; 10 I1      Fair     NA    NA   613  6817  4648  5750  6289</span></span>
+<span id="cb2-431"><a href="#cb2-431" tabindex="-1"></a><span class="co">#&gt; # ℹ 166 more rows</span></span>
+<span id="cb2-432"><a href="#cb2-432" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-433"><a href="#cb2-433" tabindex="-1"></a><span class="co">#&gt; $IF</span></span>
+<span id="cb2-434"><a href="#cb2-434" tabindex="-1"></a><span class="co">#&gt; # A tibble: 362 × 9</span></span>
+<span id="cb2-435"><a href="#cb2-435" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-436"><a href="#cb2-436" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-437"><a href="#cb2-437" tabindex="-1"></a><span class="co">#&gt;  1 IF      Fair   1208    NA  2861  1127    NA    NA    NA</span></span>
+<span id="cb2-438"><a href="#cb2-438" tabindex="-1"></a><span class="co">#&gt;  2 IF      Fair   1440    NA  3205  1849    NA    NA    NA</span></span>
+<span id="cb2-439"><a href="#cb2-439" tabindex="-1"></a><span class="co">#&gt;  3 IF      Fair   2211    NA  1166    NA    NA    NA    NA</span></span>
+<span id="cb2-440"><a href="#cb2-440" tabindex="-1"></a><span class="co">#&gt;  4 IF      Fair     NA    NA  2144    NA    NA    NA    NA</span></span>
+<span id="cb2-441"><a href="#cb2-441" tabindex="-1"></a><span class="co">#&gt;  5 IF      Good   3378   597  2980  3304  6703  3669  5361</span></span>
+<span id="cb2-442"><a href="#cb2-442" tabindex="-1"></a><span class="co">#&gt;  6 IF      Good   3509  6804  3393  3583 13248  3734  6299</span></span>
+<span id="cb2-443"><a href="#cb2-443" tabindex="-1"></a><span class="co">#&gt;  7 IF      Good  15081   612  9451  5771  1440   631   827</span></span>
+<span id="cb2-444"><a href="#cb2-444" tabindex="-1"></a><span class="co">#&gt;  8 IF      Good  15928   813  9660  5855  2404   886  1061</span></span>
+<span id="cb2-445"><a href="#cb2-445" tabindex="-1"></a><span class="co">#&gt;  9 IF      Good  16406   912  9867  8973    NA   945  2053</span></span>
+<span id="cb2-446"><a href="#cb2-446" tabindex="-1"></a><span class="co">#&gt; 10 IF      Good  17499  1052   633 13998    NA    NA    NA</span></span>
+<span id="cb2-447"><a href="#cb2-447" tabindex="-1"></a><span class="co">#&gt; # ℹ 352 more rows</span></span>
+<span id="cb2-448"><a href="#cb2-448" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-449"><a href="#cb2-449" tabindex="-1"></a><span class="co">#&gt; $SI1</span></span>
+<span id="cb2-450"><a href="#cb2-450" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1,828 × 9</span></span>
+<span id="cb2-451"><a href="#cb2-451" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-452"><a href="#cb2-452" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-453"><a href="#cb2-453" tabindex="-1"></a><span class="co">#&gt;  1 SI1     Fair   3382  2885  2838  2782  2854  2804  2812</span></span>
+<span id="cb2-454"><a href="#cb2-454" tabindex="-1"></a><span class="co">#&gt;  2 SI1     Fair   3689  3332  2882  2841  2873  2856  2949</span></span>
+<span id="cb2-455"><a href="#cb2-455" tabindex="-1"></a><span class="co">#&gt;  3 SI1     Fair   3730  3407  2971  2964  3024  2873  3027</span></span>
+<span id="cb2-456"><a href="#cb2-456" tabindex="-1"></a><span class="co">#&gt;  4 SI1     Fair   3751  3508  3117  2993  3057  2875  3154</span></span>
+<span id="cb2-457"><a href="#cb2-457" tabindex="-1"></a><span class="co">#&gt;  5 SI1     Fair   3812  3696  3160  3052  3145  2912  3175</span></span>
+<span id="cb2-458"><a href="#cb2-458" tabindex="-1"></a><span class="co">#&gt;  6 SI1     Fair   3855  3743  3197  3145  3180  3280  3427</span></span>
+<span id="cb2-459"><a href="#cb2-459" tabindex="-1"></a><span class="co">#&gt;  7 SI1     Fair   3945  3891  3323  3250  3278  3337  3780</span></span>
+<span id="cb2-460"><a href="#cb2-460" tabindex="-1"></a><span class="co">#&gt;  8 SI1     Fair   4118   579  3326  3299  3282  3584  4123</span></span>
+<span id="cb2-461"><a href="#cb2-461" tabindex="-1"></a><span class="co">#&gt;  9 SI1     Fair   4252  4106  3387  3304  3285  3892  4147</span></span>
+<span id="cb2-462"><a href="#cb2-462" tabindex="-1"></a><span class="co">#&gt; 10 SI1     Fair   4276  4140  3437  3358  3387  3920  4838</span></span>
+<span id="cb2-463"><a href="#cb2-463" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,818 more rows</span></span>
+<span id="cb2-464"><a href="#cb2-464" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-465"><a href="#cb2-465" tabindex="-1"></a><span class="co">#&gt; $SI2</span></span>
+<span id="cb2-466"><a href="#cb2-466" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1,494 × 9</span></span>
+<span id="cb2-467"><a href="#cb2-467" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-468"><a href="#cb2-468" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-469"><a href="#cb2-469" tabindex="-1"></a><span class="co">#&gt;  1 SI2     Fair   2848  2757  2759  2834  2763  2811  2789</span></span>
+<span id="cb2-470"><a href="#cb2-470" tabindex="-1"></a><span class="co">#&gt;  2 SI2     Fair   2885  2797  2815  2856  2777  2884  2992</span></span>
+<span id="cb2-471"><a href="#cb2-471" tabindex="-1"></a><span class="co">#&gt;  3 SI2     Fair   2974  2815  2867  2858  2818  2948  3119</span></span>
+<span id="cb2-472"><a href="#cb2-472" tabindex="-1"></a><span class="co">#&gt;  4 SI2     Fair   3003  2855  2958  2942  2823  3054  3149</span></span>
+<span id="cb2-473"><a href="#cb2-473" tabindex="-1"></a><span class="co">#&gt;  5 SI2     Fair   3079  2862  2964  3027  2825  3084  3199</span></span>
+<span id="cb2-474"><a href="#cb2-474" tabindex="-1"></a><span class="co">#&gt;  6 SI2     Fair   3205  2930  2996  3104  2846  3290  3246</span></span>
+<span id="cb2-475"><a href="#cb2-475" tabindex="-1"></a><span class="co">#&gt;  7 SI2     Fair   3304  2948  3062  3142  2856  3348  3302</span></span>
+<span id="cb2-476"><a href="#cb2-476" tabindex="-1"></a><span class="co">#&gt;  8 SI2     Fair   3384  2982  3146  3172  2875  3530  3403</span></span>
+<span id="cb2-477"><a href="#cb2-477" tabindex="-1"></a><span class="co">#&gt;  9 SI2     Fair   3473  3011  3170  3173  2883  3669  3984</span></span>
+<span id="cb2-478"><a href="#cb2-478" tabindex="-1"></a><span class="co">#&gt; 10 SI2     Fair   3634  3084  3210  3332  2912  3802  4056</span></span>
+<span id="cb2-479"><a href="#cb2-479" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,484 more rows</span></span>
+<span id="cb2-480"><a href="#cb2-480" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-481"><a href="#cb2-481" tabindex="-1"></a><span class="co">#&gt; $VS1</span></span>
+<span id="cb2-482"><a href="#cb2-482" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1,355 × 9</span></span>
+<span id="cb2-483"><a href="#cb2-483" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-484"><a href="#cb2-484" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-485"><a href="#cb2-485" tabindex="-1"></a><span class="co">#&gt;  1 VS1     Fair   3047  2964  2859  2800  3500  3387  2875</span></span>
+<span id="cb2-486"><a href="#cb2-486" tabindex="-1"></a><span class="co">#&gt;  2 VS1     Fair    563  3276  2879  2998  3676  3763  2964</span></span>
+<span id="cb2-487"><a href="#cb2-487" tabindex="-1"></a><span class="co">#&gt;  3 VS1     Fair   7083  4770  3002  3756  3924  3801  3080</span></span>
+<span id="cb2-488"><a href="#cb2-488" tabindex="-1"></a><span class="co">#&gt;  4 VS1     Fair   1166  7392  3031  3806  4044  3951  7139</span></span>
+<span id="cb2-489"><a href="#cb2-489" tabindex="-1"></a><span class="co">#&gt;  5 VS1     Fair   2747   640  3039  4455  4368  4263  7186</span></span>
+<span id="cb2-490"><a href="#cb2-490" tabindex="-1"></a><span class="co">#&gt;  6 VS1     Fair     NA 15584  3750  4630  4455  4281  7819</span></span>
+<span id="cb2-491"><a href="#cb2-491" tabindex="-1"></a><span class="co">#&gt;  7 VS1     Fair     NA   361  4183  4864  4732  4328  9314</span></span>
+<span id="cb2-492"><a href="#cb2-492" tabindex="-1"></a><span class="co">#&gt;  8 VS1     Fair     NA   371   593  4892  5062  6727 13399</span></span>
+<span id="cb2-493"><a href="#cb2-493" tabindex="-1"></a><span class="co">#&gt;  9 VS1     Fair     NA   799  4984  5487  5242 11322 14402</span></span>
+<span id="cb2-494"><a href="#cb2-494" tabindex="-1"></a><span class="co">#&gt; 10 VS1     Fair     NA  1778  5833  5633  5460 12244 14750</span></span>
+<span id="cb2-495"><a href="#cb2-495" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,345 more rows</span></span>
+<span id="cb2-496"><a href="#cb2-496" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-497"><a href="#cb2-497" tabindex="-1"></a><span class="co">#&gt; $VS2</span></span>
+<span id="cb2-498"><a href="#cb2-498" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1,526 × 9</span></span>
+<span id="cb2-499"><a href="#cb2-499" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-500"><a href="#cb2-500" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-501"><a href="#cb2-501" tabindex="-1"></a><span class="co">#&gt;  1 VS2     Fair   2858   337  2762  3418  3226  2921  2811</span></span>
+<span id="cb2-502"><a href="#cb2-502" tabindex="-1"></a><span class="co">#&gt;  2 VS2     Fair   3077  2902  2805  4032  3375  3033  2815</span></span>
+<span id="cb2-503"><a href="#cb2-503" tabindex="-1"></a><span class="co">#&gt;  3 VS2     Fair   3931  2940  3172  4072  3538  3166  2854</span></span>
+<span id="cb2-504"><a href="#cb2-504" tabindex="-1"></a><span class="co">#&gt;  4 VS2     Fair   4107  3875  3750  4309  3593  3215  3190</span></span>
+<span id="cb2-505"><a href="#cb2-505" tabindex="-1"></a><span class="co">#&gt;  5 VS2     Fair   4277  4057  3837  4435  3658  3246  3422</span></span>
+<span id="cb2-506"><a href="#cb2-506" tabindex="-1"></a><span class="co">#&gt;  6 VS2     Fair   4439  4125  3931  4480  3697  3258  3443</span></span>
+<span id="cb2-507"><a href="#cb2-507" tabindex="-1"></a><span class="co">#&gt;  7 VS2     Fair   4765   581  3992  4838  3725  3265  3886</span></span>
+<span id="cb2-508"><a href="#cb2-508" tabindex="-1"></a><span class="co">#&gt;  8 VS2     Fair    592  4480  4229  4860  3733  3597  3980</span></span>
+<span id="cb2-509"><a href="#cb2-509" tabindex="-1"></a><span class="co">#&gt;  9 VS2     Fair   5078  4525  4312  4887  3819  4553   416</span></span>
+<span id="cb2-510"><a href="#cb2-510" tabindex="-1"></a><span class="co">#&gt; 10 VS2     Fair   5797  4550  4474  5161  4166  4695  5846</span></span>
+<span id="cb2-511"><a href="#cb2-511" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,516 more rows</span></span>
+<span id="cb2-512"><a href="#cb2-512" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-513"><a href="#cb2-513" tabindex="-1"></a><span class="co">#&gt; $VVS1</span></span>
+<span id="cb2-514"><a href="#cb2-514" tabindex="-1"></a><span class="co">#&gt; # A tibble: 578 × 9</span></span>
+<span id="cb2-515"><a href="#cb2-515" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-516"><a href="#cb2-516" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-517"><a href="#cb2-517" tabindex="-1"></a><span class="co">#&gt;  1 VVS1    Fair  10752  2805  7960  2797  4115  4194  1691</span></span>
+<span id="cb2-518"><a href="#cb2-518" tabindex="-1"></a><span class="co">#&gt;  2 VVS1    Fair    875  8529 12648  3062    NA    NA    NA</span></span>
+<span id="cb2-519"><a href="#cb2-519" tabindex="-1"></a><span class="co">#&gt;  3 VVS1    Fair   1792  1012   740   790    NA    NA    NA</span></span>
+<span id="cb2-520"><a href="#cb2-520" tabindex="-1"></a><span class="co">#&gt;  4 VVS1    Fair     NA    NA  1011    NA    NA    NA    NA</span></span>
+<span id="cb2-521"><a href="#cb2-521" tabindex="-1"></a><span class="co">#&gt;  5 VVS1    Fair     NA    NA  1040    NA    NA    NA    NA</span></span>
+<span id="cb2-522"><a href="#cb2-522" tabindex="-1"></a><span class="co">#&gt;  6 VVS1    Good   4198   554  3018  2899  2877   571  4633</span></span>
+<span id="cb2-523"><a href="#cb2-523" tabindex="-1"></a><span class="co">#&gt;  7 VVS1    Good   4274  2990  3206  3072  3096  3741    NA</span></span>
+<span id="cb2-524"><a href="#cb2-524" tabindex="-1"></a><span class="co">#&gt;  8 VVS1    Good   4407   575   564  3188  4381  3972    NA</span></span>
+<span id="cb2-525"><a href="#cb2-525" tabindex="-1"></a><span class="co">#&gt;  9 VVS1    Good   5029   586  3310  3225  4763  4114    NA</span></span>
+<span id="cb2-526"><a href="#cb2-526" tabindex="-1"></a><span class="co">#&gt; 10 VVS1    Good   8239   597  3536  3380  4847  4187    NA</span></span>
+<span id="cb2-527"><a href="#cb2-527" tabindex="-1"></a><span class="co">#&gt; # ℹ 568 more rows</span></span>
+<span id="cb2-528"><a href="#cb2-528" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-529"><a href="#cb2-529" tabindex="-1"></a><span class="co">#&gt; $VVS2</span></span>
+<span id="cb2-530"><a href="#cb2-530" tabindex="-1"></a><span class="co">#&gt; # A tibble: 885 × 9</span></span>
+<span id="cb2-531"><a href="#cb2-531" tabindex="-1"></a><span class="co">#&gt;    clarity cut       D     E     F     G     H     I     J</span></span>
+<span id="cb2-532"><a href="#cb2-532" tabindex="-1"></a><span class="co">#&gt;    &lt;ord&gt;   &lt;ord&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb2-533"><a href="#cb2-533" tabindex="-1"></a><span class="co">#&gt;  1 VVS2    Fair   3296  3813  3920  2959  4312  3074  2998</span></span>
+<span id="cb2-534"><a href="#cb2-534" tabindex="-1"></a><span class="co">#&gt;  2 VVS2    Fair   4040   586  4368  3323  4355  3288    NA</span></span>
+<span id="cb2-535"><a href="#cb2-535" tabindex="-1"></a><span class="co">#&gt;  3 VVS2    Fair   8716  5430  6863  4534  5171  7303    NA</span></span>
+<span id="cb2-536"><a href="#cb2-536" tabindex="-1"></a><span class="co">#&gt;  4 VVS2    Fair  10562  5551 16364  4928  7476  1401    NA</span></span>
+<span id="cb2-537"><a href="#cb2-537" tabindex="-1"></a><span class="co">#&gt;  5 VVS2    Fair    772  7553   693  6736   922  2117    NA</span></span>
+<span id="cb2-538"><a href="#cb2-538" tabindex="-1"></a><span class="co">#&gt;  6 VVS2    Fair    997  7918   743   629  1227  2131    NA</span></span>
+<span id="cb2-539"><a href="#cb2-539" tabindex="-1"></a><span class="co">#&gt;  7 VVS2    Fair   1011   738   757 13553  2500  2292    NA</span></span>
+<span id="cb2-540"><a href="#cb2-540" tabindex="-1"></a><span class="co">#&gt;  8 VVS2    Fair   1089   945  1902   369  2608  2351    NA</span></span>
+<span id="cb2-541"><a href="#cb2-541" tabindex="-1"></a><span class="co">#&gt;  9 VVS2    Fair   1980  1069  2088   819  2699    NA    NA</span></span>
+<span id="cb2-542"><a href="#cb2-542" tabindex="-1"></a><span class="co">#&gt; 10 VVS2    Fair     NA  1705  2484   833  2717    NA    NA</span></span>
+<span id="cb2-543"><a href="#cb2-543" tabindex="-1"></a><span class="co">#&gt; # ℹ 875 more rows</span></span></code></pre></div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
