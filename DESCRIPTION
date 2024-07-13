@@ -22,7 +22,7 @@ Language: en-US
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 NeedsCompilation: no
-Packaged: 2024-07-13 00:18:10 UTC; matutosi
+Packaged: 2024-07-13 00:28:16 UTC; matutosi
 Author: Toshikazu Matsumura [aut, cre]
     (<https://orcid.org/0000-0003-2306-6355>)
 Maintainer: Toshikazu Matsumura <matutosi@gmail.com>

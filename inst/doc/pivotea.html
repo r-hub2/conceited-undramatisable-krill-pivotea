@@ -352,7 +352,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
 <p>You can use <code>pivot()</code> to make a pivot table easily.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>hogwarts <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>hogwarts <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;hour&quot;</span>, <span class="at">col =</span> <span class="st">&quot;wday&quot;</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="st">&quot;subject&quot;</span>, <span class="st">&quot;teacher&quot;</span>, <span class="st">&quot;room&quot;</span>), <span class="at">split =</span> <span class="fu">c</span>(<span class="st">&quot;house&quot;</span>, <span class="st">&quot;grade&quot;</span>))</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; $Automatic.6</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 8</span></span>
@@ -637,7 +637,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-283"><a href="#cb2-283" tabindex="-1"></a><span class="co">#&gt; 7 S     5         5 &lt;NA&gt;                                 &lt;NA&gt;  Mugg… &lt;NA&gt;  &lt;NA&gt; </span></span>
 <span id="cb2-284"><a href="#cb2-284" tabindex="-1"></a><span class="co">#&gt; 8 S     5         6 Care of Magical Creatures_CoMC teac… Rune… &lt;NA&gt;  Herb… Poti…</span></span>
 <span id="cb2-285"><a href="#cb2-285" tabindex="-1"></a><span class="co">#&gt; 9 S     5         7 Divination_Div Teacher_5_E2          Rune… Char… Herb… Care…</span></span>
-<span id="cb2-286"><a href="#cb2-286" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span></span>
+<span id="cb2-286"><a href="#cb2-286" tabindex="-1"></a>starwars <span class="sc">|&gt;</span></span>
 <span id="cb2-287"><a href="#cb2-287" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;homeworld&quot;</span>, <span class="at">col =</span> <span class="st">&quot;species&quot;</span>, <span class="at">value =</span> <span class="st">&quot;name&quot;</span>, <span class="at">split =</span> <span class="st">&quot;sex&quot;</span>)</span>
 <span id="cb2-288"><a href="#cb2-288" tabindex="-1"></a><span class="co">#&gt; $female</span></span>
 <span id="cb2-289"><a href="#cb2-289" tabindex="-1"></a><span class="co">#&gt; # A tibble: 15 × 9</span></span>
@@ -697,10 +697,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-343"><a href="#cb2-343" tabindex="-1"></a><span class="co">#&gt; 4 none  &lt;NA&gt;      IG-88 </span></span>
 <span id="cb2-344"><a href="#cb2-344" tabindex="-1"></a><span class="co">#&gt; 5 none  &lt;NA&gt;      R4-P17</span></span>
 <span id="cb2-345"><a href="#cb2-345" tabindex="-1"></a><span class="co">#&gt; 6 none  &lt;NA&gt;      BB8</span></span>
-<span id="cb2-346"><a href="#cb2-346" tabindex="-1"></a>msleep <span class="sc">%&gt;%</span></span>
-<span id="cb2-347"><a href="#cb2-347" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;vore&quot;</span>, <span class="at">col =</span> <span class="st">&quot;conservation&quot;</span>, <span class="at">value =</span> <span class="st">&quot;name&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-348"><a href="#cb2-348" tabindex="-1"></a>  <span class="fu">na2empty</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-349"><a href="#cb2-349" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="fu">nrow</span>(.))</span>
+<span id="cb2-346"><a href="#cb2-346" tabindex="-1"></a>msleep <span class="sc">|&gt;</span></span>
+<span id="cb2-347"><a href="#cb2-347" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;vore&quot;</span>, <span class="at">col =</span> <span class="st">&quot;conservation&quot;</span>, <span class="at">value =</span> <span class="st">&quot;name&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-348"><a href="#cb2-348" tabindex="-1"></a>  <span class="fu">na2empty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-349"><a href="#cb2-349" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>)</span>
 <span id="cb2-350"><a href="#cb2-350" tabindex="-1"></a><span class="co">#&gt; # A tibble: 33 × 8</span></span>
 <span id="cb2-351"><a href="#cb2-351" tabindex="-1"></a><span class="co">#&gt;    vore      cd            domesticated   en             lc    nt    vu    `NA` </span></span>
 <span id="cb2-352"><a href="#cb2-352" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
@@ -737,7 +737,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-383"><a href="#cb2-383" tabindex="-1"></a><span class="co">#&gt; 31 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Pha…</span></span>
 <span id="cb2-384"><a href="#cb2-384" tabindex="-1"></a><span class="co">#&gt; 32 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Mol…</span></span>
 <span id="cb2-385"><a href="#cb2-385" tabindex="-1"></a><span class="co">#&gt; 33 &quot;&quot;        &quot;&quot;            &quot;&quot;             &quot;&quot;             &quot;&quot;    &quot;&quot;    &quot;&quot;    &quot;Mus…</span></span>
-<span id="cb2-386"><a href="#cb2-386" tabindex="-1"></a><span class="fu">as_tibble</span>(Titanic) <span class="sc">%&gt;%</span></span>
+<span id="cb2-386"><a href="#cb2-386" tabindex="-1"></a><span class="fu">as_tibble</span>(Titanic) <span class="sc">|&gt;</span></span>
 <span id="cb2-387"><a href="#cb2-387" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;Sex&quot;</span>, <span class="st">&quot;Survived&quot;</span>), <span class="at">value =</span> <span class="st">&quot;n&quot;</span>, <span class="at">split =</span> <span class="st">&quot;Class&quot;</span>)</span>
 <span id="cb2-388"><a href="#cb2-388" tabindex="-1"></a><span class="co">#&gt; $`1st`</span></span>
 <span id="cb2-389"><a href="#cb2-389" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 6</span></span>
@@ -766,7 +766,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-412"><a href="#cb2-412" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
 <span id="cb2-413"><a href="#cb2-413" tabindex="-1"></a><span class="co">#&gt; 1 Crew  Adult         3         20     670      192</span></span>
 <span id="cb2-414"><a href="#cb2-414" tabindex="-1"></a><span class="co">#&gt; 2 Crew  Child         0          0       0        0</span></span>
-<span id="cb2-415"><a href="#cb2-415" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span></span>
+<span id="cb2-415"><a href="#cb2-415" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
 <span id="cb2-416"><a href="#cb2-416" tabindex="-1"></a>  <span class="fu">pivot</span>(<span class="at">row =</span> <span class="st">&quot;cut&quot;</span>, <span class="at">col =</span> <span class="st">&quot;color&quot;</span>, <span class="at">value =</span> <span class="st">&quot;price&quot;</span>, <span class="at">split =</span> <span class="st">&quot;clarity&quot;</span>)</span>
 <span id="cb2-417"><a href="#cb2-417" tabindex="-1"></a><span class="co">#&gt; $I1</span></span>
 <span id="cb2-418"><a href="#cb2-418" tabindex="-1"></a><span class="co">#&gt; # A tibble: 176 × 9</span></span>
